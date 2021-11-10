@@ -1,0 +1,21 @@
+.searchBar {
+  flex: 0.4;
+  background-color: #ffff;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  background-color: #ffff;
+  overflow-y: auto;
+}
+.search-top {
+  padding: 5px;
+}
+
+.searchButton {
+  margin-left: 8px !important;
+  text-transform: capitalize !important;
+}
+
+.css-19kzrtu {
+  padding: 3px !important;
+}

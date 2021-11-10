@@ -1,0 +1,25 @@
+.profile {
+  min-height: 100vh;
+}
+.profile-panel {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.dog-panel {
+  display: flex;
+  justify-content: space-between;
+}
+
+.dog-list {
+  padding: 3px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.dog-add {
+    margin: 8px;
+  width: 300px;
+}

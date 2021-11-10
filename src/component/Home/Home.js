@@ -1,13 +1,16 @@
-import React from 'react';
-import Map from '../Map/Map';
+import React from "react";
+import "./Home.css";
+import Map from "../Map/Map";
+import SearchBar from "../Search/SearchBar";
 
 
 function Home() {
-    return (
-        <div className="home">
-           <Map/>
-        </div>
-    )
+  return (
+    <div className="home">
+        <SearchBar/>
+      <Map />
+    </div>
+  );
 }
 
-export default Home
+export default Home;
