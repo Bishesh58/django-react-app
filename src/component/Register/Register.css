@@ -1,11 +1,12 @@
-.login {
+.register {
   background-color: rgb(183, 209, 237);
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.login-title {
+
+.register-title {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -18,7 +19,7 @@ h3 {
 }
 
 form {
-  min-width: 500px;
+  width: 500px;
   min-height: 400px;
   padding: 10px;
   margin: 8px;
@@ -33,9 +34,6 @@ form {
   margin-bottom: 16px !important;
 }
 
-.login-input {
+.register-input {
   padding: 10px;
 }
-
- 
- 

@@ -1,0 +1,10 @@
+.navbar {
+   
+}
+
+.navbar-links{
+    color: white;
+    cursor: pointer;
+    list-style: none;
+    text-decoration: none; 
+}

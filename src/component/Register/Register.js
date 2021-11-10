@@ -1,11 +1,11 @@
 import React, { useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import "./Login.css";
+import "./Register.css";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import LockIcon from "@mui/icons-material/Lock";
 
-function Login() {
+function Register() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -43,13 +43,41 @@ function Login() {
   };
 
   return (
-    <div className="login">
+    <div className="register">
       <form noValidate autoComplete="off" onSubmit={handleSubmit}>
-        <div className="login-title">
+        <div className="register-title">
           <LockIcon />
-          <h3>Sign in form</h3>
+          <h3>Sign up form</h3>
         </div>
-        <div className="login-input">
+        <div className="register-input">
+          <TextField
+            className="TextField"
+            error={usernameError}
+            helperText={usernameErrorMessage}
+            label="username"
+            onChange={(e) => setUsername(e.target.value)}
+            ref={usr}
+            required
+            fullWidth
+            variant="outlined"
+            onFocus={() => (
+              setUsernameError(false), setUsernameErrorMessage("")
+            )}
+          />
+          <TextField
+            className="TextField"
+            error={usernameError}
+            helperText={usernameErrorMessage}
+            label="username"
+            onChange={(e) => setUsername(e.target.value)}
+            ref={usr}
+            required
+            fullWidth
+            variant="outlined"
+            onFocus={() => (
+              setUsernameError(false), setUsernameErrorMessage("")
+            )}
+          />
           <TextField
             className="TextField"
             error={usernameError}
@@ -80,6 +108,20 @@ function Login() {
               setPasswordError(false), setPasswordErrorMessage("")
             )}
           />
+          <TextField
+            className="TextField"
+            error={usernameError}
+            helperText={usernameErrorMessage}
+            label="username"
+            onChange={(e) => setUsername(e.target.value)}
+            ref={usr}
+            required
+            fullWidth
+            variant="outlined"
+            onFocus={() => (
+              setUsernameError(false), setUsernameErrorMessage("")
+            )}
+          />
         </div>
 
         <Button variant="contained" color="success" size="large">
@@ -96,4 +138,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default Register;
