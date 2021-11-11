@@ -1,5 +1,6 @@
 .searchBar {
-  flex: 0.4;
+  height: 100%;
+  width: 100%;
   background-color: #ffff;
   box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
   backdrop-filter: blur(4px);
@@ -18,4 +19,11 @@
 
 .css-19kzrtu {
   padding: 3px !important;
+}
+.search-new-event {
+  display: flex;
+  justify-content: center;
+}
+.search-new-event form {
+  max-width: 500px;
 }

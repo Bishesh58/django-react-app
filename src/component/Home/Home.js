@@ -1,14 +1,17 @@
 import React from "react";
 import "./Home.css";
-import Map from "../Map/Map";
+import GMap from "../Map/GMap";
 import SearchBar from "../Search/SearchBar";
-
 
 function Home() {
   return (
     <div className="home">
-        <SearchBar/>
-      <Map />
+      <div className="home-search">
+        <SearchBar />
+      </div>
+      <div className="home-map">
+        <GMap />
+      </div>
     </div>
   );
 }

@@ -256,11 +256,60 @@ function SearchBar(props) {
             </form>
           </TabPanel>
           <TabPanel value={value} index={1}>
-            Item Two
+            <div className="search-new-event">
+              <form noValidate autoComplete="off">
+                <div className="register-title">
+                  <h3>Add new Event</h3>
+                </div>
+                <div className="register-input">
+                  <TextField
+                    className="TextField"
+                    label="username"
+                    required
+                    fullWidth
+                    variant="outlined"
+                  />
+                  <TextField
+                    className="TextField"
+                    label="username"
+                    required
+                    fullWidth
+                    variant="outlined"
+                  />
+                  <TextField
+                    className="TextField"
+                    label="username"
+                    required
+                    fullWidth
+                    variant="outlined"
+                  />
+                  <TextField
+                    className="TextField"
+                    label="username"
+                    required
+                    fullWidth
+                    variant="outlined"
+                  />
+                  <TextField
+                    className="TextField"
+                    label="username"
+                    required
+                    fullWidth
+                    variant="outlined"
+                  />
+                </div>
+
+                <Button variant="contained" color="success" size="large">
+                  Submit
+                  {/* {auth.isLoading ? <CircularProgress size="30px" /> : "Sign In"} */}
+                </Button>
+              </form>
+            </div>
           </TabPanel>
         </Box>
       </div>
       <div className="search-bottom">
+        Event's record will go here
         {/* {data?.map((Ev) => (
           <EventCard Ev={Ev} />
         ))}

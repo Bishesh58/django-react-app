@@ -2,3 +2,11 @@
     min-height: 100vh;
     display: flex;
 }
+
+.home-search {
+    flex: 0.4;
+}
+
+.home-map {
+    flex: 0.6;
+}
