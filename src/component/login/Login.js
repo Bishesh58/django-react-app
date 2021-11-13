@@ -111,6 +111,9 @@ function Login() {
           )}
         </Button>
         <p>
+              Forget password? <span className="forgetpw">Reset Now</span>
+            </p>
+        <p>
           Are you admin? <a className="admin" href="https://django-dog-api.herokuapp.com/admin/">Click here</a>
         </p>
         {auth.error && (
