@@ -4,6 +4,10 @@ import "./Login.css";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import LockIcon from "@mui/icons-material/Lock";
+import CircularProgress from "@mui/material/CircularProgress";
+import axios from "axios";
+import { login } from "../../redux/apiCalls";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
   const [username, setUsername] = useState("");
@@ -16,7 +20,9 @@ function Login() {
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
+  const auth = useSelector((state) => state.auth);
   //ref for input
   const usr = useRef();
   const pw = useRef();
@@ -37,9 +43,20 @@ function Login() {
       setPasswordError(true);
       setPasswordErrorMessage("Please fill in this field.");
     } else {
-      //login({ username, password }, dispatch, history);
-      console.log("submitted-->");
+      login({ username, password }, dispatch, navigate);
+
+      // axios
+      // .post("https://django-dog-api.herokuapp.com/api/login/", {
+      //   username: username,
+      //   password: password,
+      // })
+      // .then((res) => console.log(res.data.token))
+      // .catch((error) => console.log(error));
     }
+  };
+
+  const adminLogin = () => {
+    navigate("https://django-dog-api.herokuapp.com/admin/")
   };
 
   return (
@@ -82,16 +99,26 @@ function Login() {
           />
         </div>
 
-        <Button variant="contained" color="success" size="large">
-          Login
-          {/* {auth.isLoading ? <CircularProgress size="30px" /> : "Sign In"} */}
+        <Button type="submit" variant="contained" color="primary" size="large">
+          {auth.isLoading ? (
+            <CircularProgress
+              size="30px"
+              style={{ marginLeft: "10px" }}
+              color="inherit"
+            />
+          ) : (
+            "Sign In"
+          )}
         </Button>
+        <p>
+          Are you admin? <a className="admin" href="https://django-dog-api.herokuapp.com/admin/">Click here</a>
+        </p>
+        {auth.error && (
+          <span style={{ paddingLeft: "15px", color: "tomato" }}>
+            Wrong username or password!
+          </span>
+        )}
       </form>
-      {/* {auth.error && (
-            <span style={{ paddingLeft: "15px", color: "orange" }}>
-              Wrong username or password!
-            </span>
-          )} */}
     </div>
   );
 }

@@ -7,10 +7,13 @@ import Home from './component/Home/Home';
 import Navbar from "./component/Navbar/Navbar";
 import Footer from "./component/Footer/Footer";
 import Profile from "./component/Profile/Profile";
+import { useSelector } from "react-redux";
 
 
 
 function App() {
+
+  const { token } = useSelector((state) => state.auth);
   return (
     <div className="app">
       <Router>

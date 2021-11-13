@@ -12,9 +12,22 @@ import Menu from "@mui/material/Menu";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../../redux/authSlice";
+
 
 export default function Navbar() {
+
+
+  const { authToken } = useSelector((state) => state.auth);
+  const token = localStorage.getItem('token');
+  console.log(token)
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
@@ -38,6 +51,12 @@ export default function Navbar() {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
+  const handleLogout = () => {
+    dispatch(logout());
+    setAnchorEl(null);
+    navigate("/login");
+    localStorage.clear();
+  };
   const menuId = "primary-search-account-menu";
   const renderMenu = (
     <Menu
@@ -55,7 +74,7 @@ export default function Navbar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
+      <MenuItem onClick={handleLogout}>Logout</MenuItem>
     </Menu>
   );
 
@@ -115,58 +134,68 @@ export default function Navbar() {
               alt=""
             />
           </IconButton>
-          <Link to="/" className="navbar-links">
-            <Typography
-              variant="h6"
-              noWrap
-              component="div"
-              sx={{ display: { xs: "none", sm: "block" } }}
-            >
-              DogSquard
-            </Typography>
-          </Link>
-          <Box sx={{ flexGrow: 1 }} />
-          <Box sx={{ display: { xs: "none", md: "flex" } }}>
-            <Link to="/profile" className="navbar-links">
-              <Button color="inherit" size="large">
-                Profile
-              </Button>
-            </Link>
-            <Link to="/login" className="navbar-links">
-              <Button color="inherit" size="large">
-                Login
-              </Button>
-            </Link>
 
-            <Link to="/register" className="navbar-links">
-              <Button color="inherit" size="large">
-                Register
-              </Button>
-            </Link>
-            <IconButton
-              size="large"
-              edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
-              color="inherit"
-            >
-              <AccountCircle />
-            </IconButton>
-          </Box>
-          <Box sx={{ display: { xs: "flex", md: "none" } }}>
-            <IconButton
-              size="large"
-              aria-label="show more"
-              aria-controls={mobileMenuId}
-              aria-haspopup="true"
-              onClick={handleMobileMenuOpen}
-              color="inherit"
-            >
-              <MoreIcon />
-            </IconButton>
-          </Box>
+          {authToken || token ? (
+            <>
+              <Link to="/" className="navbar-links">
+                <Typography
+                  variant="h6"
+                  noWrap
+                  component="div"
+                  sx={{ display: { xs: "none", sm: "block" } }}
+                >
+                  DogSquard
+                </Typography>
+              </Link>
+              <Box sx={{ flexGrow: 1 }} />
+              <Link to="/profile" className="navbar-links">
+                <Button color="inherit" size="large">
+                  Profile
+                </Button>
+              </Link>
+              <IconButton
+                size="large"
+                edge="end"
+                aria-label="account of current user"
+                aria-controls={menuId}
+                aria-haspopup="true"
+                onClick={handleProfileMenuOpen}
+                color="inherit"
+              >
+                <AccountCircle />
+              </IconButton>
+            </>
+          ) : (
+            <>
+              <Box sx={{ display: { xs: "flex", md: "none" } }}>
+                <IconButton
+                  size="large"
+                  aria-label="show more"
+                  aria-controls={mobileMenuId}
+                  aria-haspopup="true"
+                  onClick={handleMobileMenuOpen}
+                  color="inherit"
+                >
+                  <MoreIcon />
+                </IconButton>
+              </Box>
+              <Box sx={{ display: { xs: "none", md: "flex" } }}>
+                <Link to="/login" className="navbar-links">
+                  <Button color="inherit" size="large">
+                    Login
+                  </Button>
+                </Link>
+
+                <Link to="/register" className="navbar-links">
+                  <Button color="inherit" size="large">
+                    Register
+                  </Button>
+                </Link>
+              </Box>
+            </>
+          )}
+
+          
         </Toolbar>
       </AppBar>
       {renderMobileMenu}

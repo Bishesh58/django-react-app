@@ -37,5 +37,8 @@ h3 {
   padding: 10px;
 }
 
- 
+.admin {
+  color: #0177b7;
+  cursor: pointer;
+}
  
