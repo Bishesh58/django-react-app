@@ -27,3 +27,20 @@
 .search-new-event form {
   max-width: 500px;
 }
+.date {
+  margin: 16px 0px;
+  width: 100%;
+}
+textarea {
+  padding: 8px !important;
+  font-size: 16px;
+}
+
+.events-data{
+  height: 100%;
+}
+
+.tabPanel{
+  height: 90vh;
+  overflow-y: auto;
+}

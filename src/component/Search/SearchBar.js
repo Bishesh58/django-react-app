@@ -13,6 +13,11 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import DateTimePicker from "@mui/lab/DateTimePicker";
+import TextareaAutosize from "@mui/material/TextareaAutosize";
+import EventCard from "../EventCard/EventCard";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -26,7 +31,7 @@ function TabPanel(props) {
     >
       {value === index && (
         <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
+          <Typography component={'div'}>{children}</Typography>
         </Box>
       )}
     </div>
@@ -47,7 +52,13 @@ function a11yProps(index) {
 }
 
 function SearchBar(props) {
+  const dispatch = useDispatch();
+  const token = localStorage.getItem("token");
+
   const [value, setValue] = useState(0);
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+  const [publishedDate, setPublishedDate] = useState(new Date());
 
   const handleTabChange = (event, newValue) => {
     setValue(newValue);
@@ -80,7 +91,14 @@ function SearchBar(props) {
     if (!inputText) {
       // setData(eventsDetails);
     } else {
-      const res = await axios.get(`/api/events/`);
+      const res = await axios.get(
+        `https://django-dog-api.herokuapp.com/api/events/`,
+        {
+          headers: {
+            Authorization: `token ${token}`,
+          },
+        }
+      );
       const resData = res.data;
       const filterData = resData.filter((item) => {
         return (
@@ -99,7 +117,14 @@ function SearchBar(props) {
   };
   const handleFilterSearch = async (e) => {
     e.preventDefault();
-    const res = await axios.get(`/api/events/`);
+    const res = await axios.get(
+      `https://django-dog-api.herokuapp.com/api/events/`,
+      {
+        headers: {
+          Authorization: `token ${token}`,
+        },
+      }
+    );
     const resData = res.data;
     const filterData = resData.filter((item) => {
       return (
@@ -135,7 +160,7 @@ function SearchBar(props) {
               <Tab label="Add Event" {...a11yProps(1)} />
             </Tabs>
           </Box>
-          <TabPanel value={value} index={0}>
+          <TabPanel value={value} index={0} className="tabPanel">
             <form noValidate autoComplete="off">
               <div>
                 <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
@@ -254,52 +279,92 @@ function SearchBar(props) {
                 </Button>
               </div>
             </form>
+            <div className="events-data">
+              <EventCard />
+              <EventCard />
+              <EventCard />
+              <EventCard />
+              <EventCard />
+              <EventCard />
+              <EventCard />
+              <EventCard />
+            </div>
           </TabPanel>
           <TabPanel value={value} index={1}>
             <div className="search-new-event">
               <form noValidate autoComplete="off">
                 <div className="register-title">
-                  <h3>Add new Event</h3>
+                  <span style={{ color: "grey", fontSize: "18px" }}>
+                    Add new Event
+                  </span>
                 </div>
                 <div className="register-input">
                   <TextField
                     className="TextField"
-                    label="username"
+                    label="Title"
                     required
                     fullWidth
                     variant="outlined"
                   />
                   <TextField
                     className="TextField"
-                    label="username"
-                    required
+                    label="creator"
+                    defaultValue="bishesh"
+                    disabled
                     fullWidth
                     variant="outlined"
                   />
-                  <TextField
-                    className="TextField"
-                    label="username"
-                    required
-                    fullWidth
-                    variant="outlined"
+                  <TextareaAutosize
+                    maxRows={6}
+                    minRows={6}
+                    aria-label="body"
+                    placeholder="Write your event activities/details here:"
+                    style={{ width: "100%" }}
                   />
-                  <TextField
-                    className="TextField"
-                    label="username"
-                    required
-                    fullWidth
-                    variant="outlined"
-                  />
-                  <TextField
-                    className="TextField"
-                    label="username"
-                    required
-                    fullWidth
-                    variant="outlined"
-                  />
+                  <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <div className="date">
+                      <DateTimePicker
+                        renderInput={(props) => <TextField {...props} />}
+                        label="Start Date"
+                        value={startDate}
+                        fullWidth
+                        onChange={(newValue) => {
+                          setStartDate(newValue);
+                        }}
+                      />
+                    </div>
+                    <div className="date">
+                      <DateTimePicker
+                        renderInput={(props) => <TextField {...props} />}
+                        label="End Date"
+                        value={endDate}
+                        fullWidth
+                        onChange={(newValue) => {
+                          setEndDate(newValue);
+                        }}
+                      />
+                    </div>
+                    <div className="date">
+                      <DateTimePicker
+                        renderInput={(props) => <TextField {...props} />}
+                        label="published date"
+                        value={publishedDate}
+                        readOnly
+                        fullWidth
+                        onChange={(newValue) => {
+                          setPublishedDate(newValue);
+                        }}
+                      />
+                    </div>
+                  </LocalizationProvider>
                 </div>
 
-                <Button variant="contained" color="success" size="large">
+                <Button
+                  variant="contained"
+                  color="success"
+                  size="large"
+                  style={{ marginLeft: "10px" }}
+                >
                   Submit
                   {/* {auth.isLoading ? <CircularProgress size="30px" /> : "Sign In"} */}
                 </Button>
@@ -309,7 +374,6 @@ function SearchBar(props) {
         </Box>
       </div>
       <div className="search-bottom">
-        Event's record will go here
         {/* {data?.map((Ev) => (
           <EventCard Ev={Ev} />
         ))}

@@ -1,21 +1,36 @@
 import React, { useRef, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import "./Register.css";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import LockIcon from "@mui/icons-material/Lock";
+import CircularProgress from "@mui/material/CircularProgress";
+import validator from "validator";
+import { register } from "../../redux/apiCalls";
+import { useNavigate } from "react-router-dom";
 
 function Register() {
   const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const [usernameError, setUsernameError] = useState(false);
   const [usernameErrorMessage, setUsernameErrorMessage] = useState("");
 
+  const [emailError, setEmailError] = useState(false);
+  const [emailErrorMessage, setEmailErrorMessage] = useState("");
+
   const [passwordError, setPasswordError] = useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
 
+  const [confirmPasswordError, setConfirmPasswordError] = useState(false);
+  const [confirmPasswordErrorMessage, setConfirmPasswordErrorMessage] =
+    useState("");
+
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const newUser = useSelector((state) => state.register);
 
   //ref for input
   const usr = useRef();
@@ -33,12 +48,30 @@ function Register() {
     if (username === "") {
       setUsernameError(true);
       setUsernameErrorMessage("Please fill in this field.");
+    } else if (email === "") {
+      setEmailError(true);
+      setEmailErrorMessage("Please fill in this field.");
+    } else if (!validator.isEmail(email)) {
+      setEmailError(true);
+      setEmailErrorMessage("Email is not valid");
     } else if (password === "") {
       setPasswordError(true);
       setPasswordErrorMessage("Please fill in this field.");
+    } else if (confirmPassword === "") {
+      setConfirmPasswordError(true);
+      setConfirmPasswordErrorMessage("Please fill in this field.");
+    } else if (password !== confirmPassword) {
+      alert("Passwords don't match");
     } else {
-      //login({ username, password }, dispatch, history);
-      console.log("submitted-->");
+      register(
+        {
+          username,
+          email,
+          password,
+        },
+        dispatch,
+        navigate
+      );
     }
   };
 
@@ -54,7 +87,7 @@ function Register() {
             className="TextField"
             error={usernameError}
             helperText={usernameErrorMessage}
-            label="username"
+            label="Username"
             onChange={(e) => setUsername(e.target.value)}
             ref={usr}
             required
@@ -66,42 +99,33 @@ function Register() {
           />
           <TextField
             className="TextField"
-            error={usernameError}
-            helperText={usernameErrorMessage}
-            label="username"
-            onChange={(e) => setUsername(e.target.value)}
-            ref={usr}
-            required
+            error={emailError}
             fullWidth
-            variant="outlined"
-            onFocus={() => (
-              setUsernameError(false), setUsernameErrorMessage("")
-            )}
-          />
-          <TextField
-            className="TextField"
-            error={usernameError}
-            helperText={usernameErrorMessage}
-            label="username"
-            onChange={(e) => setUsername(e.target.value)}
-            ref={usr}
+            helperText={emailErrorMessage}
+            label="Email"
+            onChange={(e) => setEmail(e.target.value)}
             required
-            fullWidth
+            type="email"
+            value={email}
             variant="outlined"
-            onFocus={() => (
-              setUsernameError(false), setUsernameErrorMessage("")
-            )}
+            onKeyPress={() =>
+              validator.isEmail(email)
+                ? setEmailErrorMessage("")
+                : setEmailErrorMessage("Not a valid email!")
+            }
+            onFocus={() => (setEmailError(false), setEmailErrorMessage(""))}
           />
           <TextField
             className="TextField"
             error={passwordError}
+            fullWidth
             helperText={passwordErrorMessage}
             label="Password"
             minLength="5"
+            name="password"
             onChange={(e) => setPassword(e.target.value)}
-            ref={pw}
             required
-            fullWidth
+            ref={pw}
             type="password"
             variant="outlined"
             onFocus={() => (
@@ -110,30 +134,39 @@ function Register() {
           />
           <TextField
             className="TextField"
-            error={usernameError}
-            helperText={usernameErrorMessage}
-            label="username"
-            onChange={(e) => setUsername(e.target.value)}
-            ref={usr}
-            required
+            error={confirmPasswordError}
             fullWidth
+            helperText={confirmPasswordErrorMessage}
+            label="Confirm Password"
+            name="confirmPassword"
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            required
+            type="password"
             variant="outlined"
             onFocus={() => (
-              setUsernameError(false), setUsernameErrorMessage("")
+              setConfirmPasswordError(false), setConfirmPasswordErrorMessage("")
             )}
           />
         </div>
 
-        <Button variant="contained" color="success" size="large">
-          Login
-          {/* {auth.isLoading ? <CircularProgress size="30px" /> : "Sign In"} */}
+        <Button type="submit" variant="contained" color="success" size="large">
+          {newUser.isLoading ? <CircularProgress size="30px" /> : "Sign up"}
         </Button>
+        {newUser.error && (
+        <span
+          style={{
+            color: "tomato",
+            display: "block",
+            fontSize: "1.25rem",
+            margin: "0.75rem",
+            textAlign: "center",
+          }}
+        >
+          Something went wrong, Try again!
+        </span>
+      )}
       </form>
-      {/* {auth.error && (
-            <span style={{ paddingLeft: "15px", color: "orange" }}>
-              Wrong username or password!
-            </span>
-          )} */}
+      
     </div>
   );
 }

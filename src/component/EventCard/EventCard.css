@@ -1,0 +1,16 @@
+
+.eventCard {
+  margin: 8px;
+
+  box-shadow: 0 2px 8px 0 rgba(31, 38, 135, 0.37);
+  height: auto;
+}
+
+.eventCard:hover {
+  cursor: pointer;
+  box-shadow: 0 5px 10px 4px rgba(244, 8, 8, 0.37);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border-radius: 5px;
+  background-color: ghostwhite;
+}

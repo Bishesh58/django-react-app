@@ -1,7 +1,6 @@
-import { loginStart, loginSuccess, loginError } from "./authSlice";
 import axios from "axios";
-
-//import { registerStart, registerSuccess, registerError } from "./registerSlice";
+import { loginStart, loginSuccess, loginError } from "./authSlice";
+import { registerStart, registerSuccess, registerError } from "./registerSlice";
 // import {
 //   fetchUserStart,
 //   fetchUserSuccess,
@@ -11,17 +10,17 @@ import axios from "axios";
 //   updateUserError,
 // } from "./userSlice";
 
-// import {
-//   fetchEventsStart,
-//   fetchEventsSuccess,
-//   fetchEventsError,
-//   addNewEventStart,
-//   addNewEventSuccess,
-//   addNewEventError,
-//   updateEventsStart,
-//   updateEventsSuccess,
-//   updateEventsError,
-// } from "./eventsSlice";
+import {
+  fetchEventsStart,
+  fetchEventsSuccess,
+  fetchEventsError,
+  addNewEventStart,
+  addNewEventSuccess,
+  addNewEventError,
+  updateEventsStart,
+  updateEventsSuccess,
+  updateEventsError,
+} from "./eventsSlice";
 
 //login
 export const login = async (user, dispatch, navigate) => {
@@ -32,25 +31,38 @@ export const login = async (user, dispatch, navigate) => {
       user
     );
     dispatch(loginSuccess(res.data));
-    localStorage.setItem('token', res.data.token)
+    localStorage.setItem("token", res.data.token);
     navigate("/");
   } catch (error) {
     dispatch(loginError());
   }
 };
 
-// //register
-// export const register = async (user, dispatch, history) => {
-//   dispatch(registerStart());
-//   try {
-//     const res = await axios.post("/api/users/register", user);
-//     dispatch(registerSuccess(res.data));
-//     history.push("/login");
-//   } catch (error) {
-//     dispatch(registerError(error.message));
-//     console.log(error);
-//   }
-// };
+//register
+export const register = async (user, dispatch, navigate) => {
+  dispatch(registerStart());
+  try {
+    const res = await axios.post("https://django-dog-api.herokuapp.com/api/register/", user);
+    dispatch(registerSuccess(res.data));
+    localStorage.setItem("token", res.data.token);
+    navigate("/");
+  } catch (error) {
+    dispatch(registerError(error.message));
+    console.log(error);
+  }
+};
+
+//get events
+export const fetchEvents = async (dispatch) => {
+  dispatch(fetchEventsStart());
+  try {
+    const res = await axios.get(`https://django-dog-api.herokuapp.com/api/events/`);
+    dispatch(fetchEventsSuccess(res.data));
+  } catch (error) {
+    dispatch(fetchEventsError(error.message));
+    console.log(error);
+  }
+};
 
 // //get user
 // export const fetchUser = async (dispatch, id) => {
@@ -80,17 +92,7 @@ export const login = async (user, dispatch, navigate) => {
 //   }
 // };
 
-// //get events
-// export const fetchEvents = async (dispatch) => {
-//   dispatch(fetchEventsStart());
-//   try {
-//     const res = await axios.get(`/api/events/`);
-//     dispatch(fetchEventsSuccess(res.data));
-//   } catch (error) {
-//     dispatch(fetchEventsError(error.message));
-//     console.log(error);
-//   }
-// };
+
 
 // //add new events
 // export const addNewEvent = async (events, dispatch) => {

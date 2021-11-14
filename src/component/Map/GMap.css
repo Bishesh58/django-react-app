@@ -6,4 +6,23 @@
   background-color: #ffff;
 }
 
+.searchAddress{
+  position: absolute;
+  width: 500px !important;
+  top: 0.6rem;
+  left: 12rem;
+}
 
+.btnReset{
+  position: absolute;
+  top: 0.7rem;
+  left: 692px;
+  height: 35px;
+  width: 50px;
+  background-color: whitesmoke;
+  border: none;
+  
+}
+.btnReset:hover{
+  cursor: pointer;
+}
