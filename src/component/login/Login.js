@@ -23,6 +23,8 @@ function Login() {
   const navigate = useNavigate();
 
   const auth = useSelector((state) => state.auth);
+  const token = localStorage.getItem('token');
+  
   //ref for input
   const usr = useRef();
   const pw = useRef();

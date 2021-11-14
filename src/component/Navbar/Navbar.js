@@ -22,7 +22,6 @@ export default function Navbar() {
 
   const { authToken } = useSelector((state) => state.auth);
   const token = localStorage.getItem('token');
-  console.log(token)
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
