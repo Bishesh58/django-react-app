@@ -4,28 +4,20 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 
-function EventCard() {
+function EventCard({ev}) {
   return (
     <div className="eventCard">
       <Card sx={{ minWidth: 275 }}>
         <CardContent>
-          <Typography component={"div"}>Title: title1</Typography>
+          <Typography component={"div"}>{ev.title}</Typography>
+          <hr/>
+          <br/>
           <Typography
             component={"div"}
             sx={{ fontSize: 16 }}
             color="textSecondary"
           >
-            body: bla bla Lorem ipsum dolor sit amet, consectetur adipisicing
-            elit. Sequi deserunt distinctio reiciendis architecto debitis! Nisi,
-            eaque. Voluptates aliquam sapiente ullam porro, fuga ipsam, sit
-            cupiditate autem perferendis vel iste fugiat.
-          </Typography>
-          <Typography
-            component={"div"}
-            sx={{ fontSize: 16 }}
-            color="textSecondary"
-          >
-            address: bla bla
+            {ev.body}
           </Typography>
 
           <Typography
@@ -33,28 +25,29 @@ function EventCard() {
             sx={{ fontSize: 16 }}
             color="textSecondary"
           >
-            Start Date: date
+            Start Date: {ev.start_date}
           </Typography>
           <Typography
             component={"div"}
             sx={{ fontSize: 16 }}
             color="textSecondary"
           >
-            End Date: date
+            End Date: {ev.end_date}
           </Typography>
           <Typography
             component={"div"}
             sx={{ fontSize: 16 }}
             color="textSecondary"
           >
-            Address: address
+            Address: {ev.address}
           </Typography>
+          
           <Typography
             component={"div"}
             sx={{ fontSize: 16 }}
             color="textSecondary"
           >
-            creator: bishesh
+            created at: {ev.post_date}
           </Typography>
 
           <Typography
@@ -62,7 +55,7 @@ function EventCard() {
             sx={{ fontSize: 16 }}
             color="textSecondary"
           >
-            Total people join: join
+            Total people join: {ev.join}
           </Typography>
         </CardContent>
       </Card>

@@ -15,9 +15,13 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import DateTimePicker from "@mui/lab/DateTimePicker";
+import DatePicker from "@mui/lab/DatePicker";
 import TextareaAutosize from "@mui/material/TextareaAutosize";
 import EventCard from "../EventCard/EventCard";
+import GooglePlacesAutocomplete from "react-google-places-autocomplete";
+import { addNewEvent, fetchEvents } from "../../redux/apiCalls";
+import { CircularProgress } from "@mui/material";
+import Moment from "moment";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -31,7 +35,7 @@ function TabPanel(props) {
     >
       {value === index && (
         <Box sx={{ p: 3 }}>
-          <Typography component={'div'}>{children}</Typography>
+          <Typography component={"div"}>{children}</Typography>
         </Box>
       )}
     </div>
@@ -53,12 +57,27 @@ function a11yProps(index) {
 
 function SearchBar(props) {
   const dispatch = useDispatch();
+  const { isLoading, newEventDetails, eventsDetails } = useSelector(
+    (state) => state.events
+  );
+
   const token = localStorage.getItem("token");
 
   const [value, setValue] = useState(0);
+  const [title, setTitle] = useState("");
+  const [body, setBody] = useState("");
+  const [username, setUsername] = useState("bishesh");
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [publishedDate, setPublishedDate] = useState(new Date());
+  const [address, setAddress] = useState(null);
+
+  const [titleError, setTitleError] = useState(false);
+  const [titleErrorMessage, setTitleErrorMessage] = useState("");
+
+  useEffect(() => {
+    fetchEvents(dispatch);
+  }, []);
 
   const handleTabChange = (event, newValue) => {
     setValue(newValue);
@@ -105,8 +124,8 @@ function SearchBar(props) {
           item.address.toLowerCase().toString().includes(inputText) ||
           item.title.toLowerCase().toString().includes(inputText) ||
           item.username.toLowerCase().toString().includes(inputText) ||
-          item.dogtype.toLowerCase().toString().includes(inputText) ||
-          item.dogweight.toString().includes(inputText) ||
+          item.body.toLowerCase().toString().includes(inputText) ||
+          item.publishedDate.toString().includes(inputText) ||
           item.startDate.toLowerCase().toString().includes(inputText) ||
           item.endDate.toLowerCase().toString().includes(inputText)
         );
@@ -146,6 +165,35 @@ function SearchBar(props) {
     setDogweight("");
     setData([]);
   };
+
+  const resetField = () => {
+    const el = document.querySelector(".css-tt72xr-singleValue");
+    if (el) {
+      el.innerHTML = "";
+    }
+  };
+
+  const handleNewEventSubmit = (e) => {
+    e.preventDefault();
+    if (title === "") {
+      setTitleErrorMessage("Please enter this field");
+    } else if (address === "") {
+      return;
+    } else {
+      const payload = {
+        title,
+        body,
+        creator: username,
+        address: address.label,
+        start_date: Moment(`"${startDate}"`).format("YYYY-MM-DD"),
+        end_date: Moment(`"${endDate}"`).format("YYYY-MM-DD"),
+        post_date: Moment(`"${publishedDate}"`).format("YYYY-MM-DD"),
+      };
+      console.log(payload);
+      addNewEvent(payload, dispatch);
+    }
+  };
+
   return (
     <div className="searchBar">
       <div className="search-top">
@@ -280,79 +328,124 @@ function SearchBar(props) {
               </div>
             </form>
             <div className="events-data">
-              <EventCard />
-              <EventCard />
-              <EventCard />
-              <EventCard />
-              <EventCard />
-              <EventCard />
-              <EventCard />
-              <EventCard />
+              {eventsDetails?.map((ev, i) => (
+                <EventCard ev={ev} key={i} />
+              ))}
             </div>
           </TabPanel>
           <TabPanel value={value} index={1}>
             <div className="search-new-event">
-              <form noValidate autoComplete="off">
-                <div className="register-title">
-                  <span style={{ color: "grey", fontSize: "18px" }}>
-                    Add new Event
-                  </span>
-                </div>
+              <form
+                noValidate
+                autoComplete="off"
+                onSubmit={handleNewEventSubmit}
+              >
                 <div className="register-input">
                   <TextField
                     className="TextField"
+                    error={titleError}
+                    helperText={titleErrorMessage}
                     label="Title"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
                     required
                     fullWidth
                     variant="outlined"
+                    onFocus={() => (
+                      setTitleError(false), setTitleErrorMessage("")
+                    )}
                   />
                   <TextField
                     className="TextField"
                     label="creator"
-                    defaultValue="bishesh"
+                    defaultValue={username}
                     disabled
                     fullWidth
                     variant="outlined"
                   />
                   <TextareaAutosize
-                    maxRows={6}
-                    minRows={6}
+                    maxRows={4}
+                    minRows={4}
+                    value={body}
+                    required
+                    onChange={(e) => setBody(e.target.value)}
                     aria-label="body"
                     placeholder="Write your event activities/details here:"
                     style={{ width: "100%" }}
                   />
+                  <div className="geocoding">
+                    <span
+                      id="lblAddress"
+                      style={{ color: "grey", fontSize: "16px" }}
+                    >
+                      Address:
+                    </span>
+                    <GooglePlacesAutocomplete
+                      apiKey="AIzaSyBFItuGWneUe_7082cHZtJ8YxTtR8krmCw"
+                      selectProps={{
+                        address,
+                        onChange: setAddress,
+                        styles: {
+                          input: (provided) => ({
+                            ...provided,
+                            color: "black",
+                          }),
+                          option: (provided) => ({
+                            ...provided,
+                            color: "black",
+                          }),
+                          singleValue: (provided) => ({
+                            ...provided,
+                            color: "blue",
+                          }),
+                        },
+                      }}
+                    />
+                    <Button className="clearAddress" onClick={resetField}>
+                      clear
+                    </Button>
+                  </div>
+
                   <LocalizationProvider dateAdapter={AdapterDateFns}>
                     <div className="date">
-                      <DateTimePicker
+                      <DatePicker
                         renderInput={(props) => <TextField {...props} />}
                         label="Start Date"
                         value={startDate}
                         fullWidth
                         onChange={(newValue) => {
-                          setStartDate(newValue);
+                          setStartDate(
+                            Moment(`"${newValue}"`).format("YYYY-MM-DD")
+                          );
                         }}
+                        renderInput={(params) => <TextField {...params} />}
                       />
                     </div>
                     <div className="date">
-                      <DateTimePicker
+                      <DatePicker
                         renderInput={(props) => <TextField {...props} />}
                         label="End Date"
                         value={endDate}
                         fullWidth
                         onChange={(newValue) => {
-                          setEndDate(newValue);
+                          setEndDate(
+                            Moment(`"${newValue}"`).format("YYYY-MM-DD")
+                          );
                         }}
+                        renderInput={(params) => <TextField {...params} />}
                       />
                     </div>
                     <div className="date">
-                      <DateTimePicker
+                      <DatePicker
                         renderInput={(props) => <TextField {...props} />}
                         label="published date"
                         value={publishedDate}
                         readOnly
                         fullWidth
                         onChange={(newValue) => {
-                          setPublishedDate(newValue);
+                          setPublishedDate(
+                            Moment(`"${newValue}"`).format("YYYY-MM-DD")
+                          );
                         }}
                       />
                     </div>
@@ -360,14 +453,27 @@ function SearchBar(props) {
                 </div>
 
                 <Button
+                  type="submit"
                   variant="contained"
                   color="success"
                   size="large"
                   style={{ marginLeft: "10px" }}
                 >
-                  Submit
-                  {/* {auth.isLoading ? <CircularProgress size="30px" /> : "Sign In"} */}
+                  {isLoading ? (
+                    <CircularProgress
+                      size="30px"
+                      style={{ marginLeft: "10px" }}
+                      color="inherit"
+                    />
+                  ) : (
+                    "Submit"
+                  )}
                 </Button>
+                {newEventDetails ? (
+                  <span style={{ marginLeft: "5px", color: "green" }}>
+                    You have added event successfully
+                  </span>
+                ) : null}
               </form>
             </div>
           </TabPanel>

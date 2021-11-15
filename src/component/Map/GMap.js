@@ -42,7 +42,9 @@ function GMap() {
 
   const resetAddress = () => {
     const el = document.querySelector(".css-tt72xr-singleValue");
-    el.innerHTML = "";
+    if(el){
+      el.innerHTML = "";
+    }
   };
 
   return (

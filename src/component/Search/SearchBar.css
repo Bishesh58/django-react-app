@@ -44,3 +44,20 @@ textarea {
   height: 90vh;
   overflow-y: auto;
 }
+.clearAddress{
+  margin-top: 5px;
+  height: 37px;
+  width: 50px;
+  color: whitesmoke;
+  background-color: rgb(80, 93, 133);
+  border: none;
+  border-radius: 5px;
+}
+
+.clearAddress:hover{
+  cursor: pointer;
+}
+
+.css-o9k5xi-MuiInputBase-root-MuiOutlinedInput-root{
+  width: 450px;
+}

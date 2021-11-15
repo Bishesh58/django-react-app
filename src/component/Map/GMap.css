@@ -15,12 +15,15 @@
 
 .btnReset{
   position: absolute;
-  top: 0.7rem;
+  top: 0.6rem;
   left: 692px;
-  height: 35px;
+  height: 37px;
   width: 50px;
-  background-color: whitesmoke;
+  color: whitesmoke;
+  background-color: rgb(80, 93, 133);
   border: none;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
   
 }
 .btnReset:hover{
