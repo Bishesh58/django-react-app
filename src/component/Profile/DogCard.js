@@ -22,7 +22,7 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
-export default function RecipeReviewCard() {
+export default function RecipeReviewCard({dg}) {
   const [expanded, setExpanded] = React.useState(false);
 
   const handleExpandClick = () => {
@@ -39,8 +39,9 @@ export default function RecipeReviewCard() {
       />
       <CardContent>
         <Typography variant="body2" color="text.secondary">
-         dogname: Johnny <br/>
-         dogweight: 20kg
+         dogname: {dg.dog_name} <br/>
+         dogweight: {dg.dog_weight} <br/>
+         dogcolor: {dg.dog_color} <br/>
         </Typography>
       </CardContent>
       <CardActions disableSpacing>

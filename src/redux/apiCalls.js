@@ -22,6 +22,18 @@ import {
   updateEventsError,
 } from "./eventsSlice";
 
+import {
+  fetchDogStart,
+  fetchDogSuccess,
+  fetchDogError,
+  addNewDogstart,
+  addNewDogSuccess,
+  addNewDogError,
+  updateDogStartgsStart,
+  updateDogSuccess,
+  updateDogError,
+} from "./dogSlice";
+
 //login
 export const login = async (user, dispatch, navigate) => {
   dispatch(loginStart());
@@ -64,6 +76,33 @@ export const fetchEvents = async (dispatch) => {
     console.log(error);
   }
 };
+
+//get dogs
+export const fetchDogs = async (dispatch) => {
+  dispatch(fetchDogStart());
+  try {
+    const res = await axios.get(`https://django-dog-api.herokuapp.com/api/dogs/`);
+    dispatch(fetchDogSuccess(res.data));
+  } catch (error) {
+    dispatch(fetchDogError(error.message));
+    console.log(error);
+  }
+};
+
+//add new dogs
+export const addNewDog = async (dogs, dispatch) => {
+  dispatch(addNewDogstart());
+  try {
+    const res = await axios.post(`https://django-dog-api.herokuapp.com/api/dogs/`, dogs);
+    dispatch(addNewDogSuccess(res.data));
+    const res1 = await axios.get(`https://django-dog-api.herokuapp.com/api/dogs/`);
+    dispatch(fetchDogSuccess(res1.data));
+  } catch (error) {
+    dispatch(addNewDogError(error.message));
+    console.log(error.response.data);
+  }
+};
+
 
 //add new events
 export const addNewEvent = async (events, dispatch) => {

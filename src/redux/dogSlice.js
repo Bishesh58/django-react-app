@@ -1,10 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-export const eventsSlice = createSlice({
-  name: "events",
+export const dogsSlice = createSlice({
+  name: "dogs",
   initialState: {
-    eventsDetails: null,
-    newEventDetails: null,
+    dogsDetails: null,
+    newDogsDetails: null,
     isLoading: false,
     error: false,
     success: false,
@@ -12,42 +12,42 @@ export const eventsSlice = createSlice({
   },
 
   reducers: {
-    fetchEventsStart: (state) => {
+    fetchDogStart: (state) => {
       state.isLoading = true;
     },
-    fetchEventsSuccess: (state, action) => {
-      state.eventsDetails = action.payload;
+    fetchDogSuccess: (state, action) => {
+      state.dogsDetails = action.payload;
       state.isLoading = false;
       state.error = false;
     },
-    fetchEventsError: (state) => {
+    fetchDogError: (state) => {
       state.error = true;
       state.isLoading = false;
     },
-    addNewEventStart: (state, action) => {
+    addNewDogstart: (state, action) => {
       state.isLoading = true;
     },
-    addNewEventSuccess: (state, action) => {
+    addNewDogSuccess: (state, action) => {
       state.isLoading = false;
-      state.newEventDetails = action.payload;
+      state.newDogsDetails = action.payload;
       state.error = false;
     },
-    addNewEventError: (state, action) => {
+    addNewDogError: (state, action) => {
       state.error = true;
       state.isLoading = false;
       state.error = action.payload;
     },
-    updateEventsStart: (state) => {
+    updateDogStart: (state) => {
       state.isLoading = true;
       state.success = false;
     },
-    updateEventsSuccess: (state, action) => {
+    updateDogSuccess: (state, action) => {
       state.isLoading = false;
       state.successMessage = action.payload;
       state.error = false;
       state.success = true;
     },
-    updateEventsError: (state, action) => {
+    updateDogError: (state, action) => {
       state.error = true;
       state.isLoading = false;
       state.success = false;
@@ -56,15 +56,15 @@ export const eventsSlice = createSlice({
 });
 
 export const {
-  fetchEventsStart,
-  fetchEventsSuccess,
-  fetchEventsError,
-  addNewEventStart,
-  addNewEventSuccess,
-  addNewEventError,
-  updateEventsStart,
-  updateEventsSuccess,
-  updateEventsError,
-} = eventsSlice.actions;
+  fetchDogStart,
+  fetchDogSuccess,
+  fetchDogError,
+  addNewDogstart,
+  addNewDogSuccess,
+  addNewDogError,
+  updateDogStartgsStart,
+  updateDogSuccess,
+  updateDogError,
+} = dogsSlice.actions;
 
-export default eventsSlice.reducer;
+export default dogsSlice.reducer;

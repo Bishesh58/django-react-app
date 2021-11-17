@@ -46,14 +46,6 @@ function Login() {
       setPasswordErrorMessage("Please fill in this field.");
     } else {
       login({ username, password }, dispatch, navigate);
-
-      // axios
-      // .post("https://django-dog-api.herokuapp.com/api/login/", {
-      //   username: username,
-      //   password: password,
-      // })
-      // .then((res) => console.log(res.data.token))
-      // .catch((error) => console.log(error));
     }
   };
 
