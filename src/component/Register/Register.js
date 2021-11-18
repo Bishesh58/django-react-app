@@ -11,12 +11,20 @@ import { useNavigate } from "react-router-dom";
 
 function Register() {
   const [username, setUsername] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const [usernameError, setUsernameError] = useState(false);
   const [usernameErrorMessage, setUsernameErrorMessage] = useState("");
+
+  const [firstNameError, setFirstNameError] = useState(false);
+  const [firstNameErrorMessage, setFirstNameErrorMessage] = useState("");
+
+  const [lastNameError, setLastNameError] = useState(false);
+  const [lastNameErrorMessage, setLastNameErrorMessage] = useState("");
 
   const [emailError, setEmailError] = useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = useState("");
@@ -48,7 +56,15 @@ function Register() {
     if (username === "") {
       setUsernameError(true);
       setUsernameErrorMessage("Please fill in this field.");
-    } else if (email === "") {
+    }
+    else if (firstName === "") {
+      setFirstNameError(true);
+      setFirstNameErrorMessage("Please fill in this field.");
+    } 
+    else if (lastName === "") {
+      setLastNameError(true);
+      setLastNameErrorMessage("Please fill in this field.");
+    }else if (email === "") {
       setEmailError(true);
       setEmailErrorMessage("Please fill in this field.");
     } else if (!validator.isEmail(email)) {
@@ -66,6 +82,8 @@ function Register() {
       register(
         {
           username,
+          first_name: firstName,
+          last_name : lastName,
           email,
           password,
         },
@@ -97,6 +115,36 @@ function Register() {
               setUsernameError(false), setUsernameErrorMessage("")
             )}
           />
+          
+          <TextField
+            className="TextField"
+            error={firstNameError}
+            helperText={firstNameErrorMessage}
+            label="First Name"
+            onChange={(e) => setFirstName(e.target.value)}
+            ref={usr}
+            required
+            fullWidth
+            variant="outlined"
+            onFocus={() => (
+              setFirstNameError(false), setFirstNameErrorMessage("")
+            )}
+          />
+          <TextField
+            className="TextField"
+            error={lastNameError}
+            helperText={lastNameErrorMessage}
+            label="Last Name"
+            onChange={(e) => setLastName(e.target.value)}
+            ref={usr}
+            required
+            fullWidth
+            variant="outlined"
+            onFocus={() => (
+              setLastNameError(false), setLastNameErrorMessage("")
+            )}
+          />
+         
           <TextField
             className="TextField"
             error={emailError}

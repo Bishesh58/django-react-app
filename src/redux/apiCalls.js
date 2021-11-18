@@ -43,6 +43,7 @@ export const login = async (user, dispatch, navigate) => {
       user
     );
     dispatch(loginSuccess(res.data));
+    console.log(res.data);
     localStorage.setItem("token", res.data.token);
     navigate("/");
   } catch (error) {
@@ -56,6 +57,7 @@ export const register = async (user, dispatch, navigate) => {
   try {
     const res = await axios.post("https://django-dog-api.herokuapp.com/api/register/", user);
     dispatch(registerSuccess(res.data));
+    console.log(res.data);
     localStorage.setItem("token", res.data.token);
     navigate("/");
   } catch (error) {
