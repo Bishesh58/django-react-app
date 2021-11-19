@@ -9,6 +9,7 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Button from "@mui/material/Button";
+import { useSelector } from "react-redux";
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -28,6 +29,8 @@ export default function RecipeReviewCard() {
     setExpanded(!expanded);
   };
 
+  const { authToken } = useSelector((state) => state.auth);
+
   return (
     <Card sx={{ maxWidth: 400, minWidth: 400, margin: 3 }}>
       <CardMedia
@@ -38,10 +41,16 @@ export default function RecipeReviewCard() {
       />
       <CardContent>
         <Typography variant="body2" color="text.secondary">
-          dogname: Johnny
+          Username: {authToken.username}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          dogweight: 20kg
+          First Name: {authToken?.first_name}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          Last Name: {authToken?.last_name}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          email: {authToken?.email}
         </Typography>
        
       </CardContent>

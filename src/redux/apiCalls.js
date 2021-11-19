@@ -57,9 +57,8 @@ export const register = async (user, dispatch, navigate) => {
   try {
     const res = await axios.post("https://django-dog-api.herokuapp.com/api/register/", user);
     dispatch(registerSuccess(res.data));
-    console.log(res.data);
-    localStorage.setItem("token", res.data.token);
-    navigate("/");
+    alert("Register success. You can login now");
+    navigate("/login");
   } catch (error) {
     dispatch(registerError(error.message));
     console.log(error);
