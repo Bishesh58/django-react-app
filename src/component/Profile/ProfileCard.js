@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import { styled } from "@mui/material/styles";
 import Card from "@mui/material/Card";
 import CardMedia from "@mui/material/CardMedia";
@@ -10,6 +10,8 @@ import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Button from "@mui/material/Button";
 import { useSelector } from "react-redux";
+import TextField from "@mui/material/TextField";
+import axios from "axios";
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -24,12 +26,39 @@ const ExpandMore = styled((props) => {
 
 export default function RecipeReviewCard() {
   const [expanded, setExpanded] = React.useState(false);
+  const { authToken } = useSelector((state) => state.auth);
+  const userid = localStorage.getItem("userid");
+
+  const [username, setUsername] = useState(
+    authToken?.username || localStorage.getItem("username")
+  );
+
+  const [firstName, setFirstName] = useState(
+    authToken?.first_name || localStorage.getItem("firstname")
+  );
+  const [lastName, setLastName] = useState(
+    authToken?.last_name || localStorage.getItem("lastname")
+  );
+  const [email, setEmail] = useState(
+    authToken?.email || localStorage.getItem("email")
+  );
+  const [password, setPassword] = useState("");
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
 
-  const { authToken } = useSelector((state) => state.auth);
+  const handleUpdateSubmit = (e) => {
+    e.preventDefault();
+    let first_name = firstName;
+    let last_name = lastName;
+    axios.put(
+      `https://django-dog-api.herokuapp.com/api/user/${userid}/`,
+      { password, username, first_name, last_name, email }
+    );
+    setExpanded(false);
+
+  };
 
   return (
     <Card sx={{ maxWidth: 400, minWidth: 400, margin: 3 }}>
@@ -41,18 +70,17 @@ export default function RecipeReviewCard() {
       />
       <CardContent>
         <Typography variant="body2" color="text.secondary">
-          Username: {authToken.username}
+          Username: {username}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          First Name: {authToken?.first_name}
+          First Name: {firstName}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          Last Name: {authToken?.last_name}
+          Last Name: {lastName}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          email: {authToken?.email}
+          email: {email}
         </Typography>
-       
       </CardContent>
       <CardActions disableSpacing>
         <ExpandMore
@@ -66,17 +94,59 @@ export default function RecipeReviewCard() {
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
-          <Typography paragraph>Method:</Typography>
-          <Typography paragraph>
-            Heat 1/2 cup of the broth in a pot until simmering, add saffron and
-            set aside for 10 minutes.
-          </Typography>
-          <Typography paragraph>Heat asdf</Typography>
-          <Typography paragraph>xyz</Typography>
-          <Typography>
-            Set aside off of the heat to let rest for 10 minutes, and then
-            serve.
-          </Typography>
+          <form>
+            <Typography variant="body2" color="text.secondary">
+              Username:
+            </Typography>
+            <TextField
+              className="TextField"
+              required
+              fullWidth
+              placeholder={username}
+              inputProps={{ readOnly: true }}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+            <Typography variant="body2" color="text.secondary">
+              First Name:
+            </Typography>
+            <TextField
+              className="TextField"
+              fullWidth
+              placeholder={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+            />
+            <Typography variant="body2" color="text.secondary">
+              Last Name:
+            </Typography>
+            <TextField
+              className="TextField"
+              fullWidth
+              placeholder={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+            />
+            <Typography variant="body2" color="text.secondary">
+              email:
+            </Typography>
+            <TextField
+              className="TextField"
+              fullWidth
+              placeholder={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <Typography variant="body2" color="text.secondary">
+              Password:
+            </Typography>
+            <TextField
+              className="TextField"
+              fullWidth
+              type="password"
+              placeholder="password is required to update profile"
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <Button type="submit" fullWidth onClick={handleUpdateSubmit}>
+              Update
+            </Button>
+          </form>
         </CardContent>
       </Collapse>
     </Card>

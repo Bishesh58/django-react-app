@@ -43,8 +43,12 @@ export const login = async (user, dispatch, navigate) => {
       user
     );
     dispatch(loginSuccess(res.data));
-    console.log(res.data);
     localStorage.setItem("token", res.data.token);
+    localStorage.setItem("username", res.data.username);
+    localStorage.setItem("firstname", res.data.first_name);
+    localStorage.setItem("lastname", res.data.last_name);
+    localStorage.setItem("email", res.data.email);
+    localStorage.setItem("userid", res.data.userid);
     navigate("/");
   } catch (error) {
     dispatch(loginError());
@@ -84,6 +88,7 @@ export const fetchDogs = async (dispatch) => {
   try {
     const res = await axios.get(`https://django-dog-api.herokuapp.com/api/dogs/`);
     dispatch(fetchDogSuccess(res.data));
+    localStorage.setItem("dogs", JSON.stringify(res.data))
   } catch (error) {
     dispatch(fetchDogError(error.message));
     console.log(error);
@@ -98,11 +103,13 @@ export const addNewDog = async (dogs, dispatch) => {
     dispatch(addNewDogSuccess(res.data));
     const res1 = await axios.get(`https://django-dog-api.herokuapp.com/api/dogs/`);
     dispatch(fetchDogSuccess(res1.data));
+    localStorage.setItem("dogs", JSON.stringify(res1.data))
   } catch (error) {
     dispatch(addNewDogError(error.message));
     console.log(error.response.data);
   }
 };
+
 
 
 //add new events

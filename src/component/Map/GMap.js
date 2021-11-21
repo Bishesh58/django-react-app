@@ -60,7 +60,6 @@ function GMap() {
         zoom={13}
       >
         <>
-          <Marker position={center} />
           <Marker position={{ lat: lat, lng: lng }} />
           <div className="searchAddress">
             <GooglePlacesAutocomplete

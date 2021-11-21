@@ -3,6 +3,7 @@ import "./Profile.css";
 import { useSelector, useDispatch } from "react-redux";
 import ProfileCard from "./ProfileCard";
 import DogCard from "./DogCard";
+import EventHistoryCard from "../EventHistoryCard/EventHistoryCard";
 import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
@@ -14,7 +15,9 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
-import {fetchDogs, addNewDog} from "../../redux/apiCalls"
+import { fetchDogs, addNewDog } from "../../redux/apiCalls";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -48,12 +51,22 @@ function a11yProps(index) {
   };
 }
 
+function useForceUpdate() {
+  const [value, setValue] = useState(0); // integer state
+  return () => setValue((value) => value + 1); // update the state to force render
+}
+
 function Profile() {
-
+  let { dogsDetail } = useSelector((state) => state.dogs);
+  const { eventsDetails } = useSelector((state) => state.events);
+  const forceUpdate = useForceUpdate();
   useEffect(() => {
-    fetchDogs(dispatch)
-  }, [])
+    fetchDogs(dispatch);
+  }, [dogsDetail]);
 
+  const navigate = useNavigate();
+
+  const userid = localStorage.getItem("userid");
   const [value, setValue] = useState(0);
   const [dogname, setDogname] = useState("");
   const [dogcolor, setDogcolor] = useState("");
@@ -64,11 +77,12 @@ function Profile() {
   const [dogWeightErrorMessage, setDogWeightErrorMessage] = useState("");
   const [dogNameError, setDogNameError] = useState(false);
   const [dogNameErrorMessage, setDogNameErrorMessage] = useState("");
-  
+
   const dispatch = useDispatch();
-  const {dogsDetails} = useSelector((state) => state.dogs);
-  
-  //pop up
+  const ownerId = localStorage.getItem("userid");
+  let dogs = JSON.parse(localStorage["dogs"]);
+
+  //pop up add dog
   const [open, setOpen] = useState(false);
   const handleClickOpen = () => {
     setOpen(true);
@@ -77,6 +91,30 @@ function Profile() {
     setOpen(false);
   };
 
+  //pop up delete profile
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [openDelete, setOpenDelete] = useState(false);
+  const handleClickOpenDelete = () => {
+    setOpenDelete(true);
+  };
+  const handleCloseDelete = () => {
+    setOpenDelete(false);
+  };
+
+  //delete handle
+  const handleSubmitDelete = async () => {
+    const res = await axios.delete(
+      `https://django-dog-api.herokuapp.com/api/user/${userid}/`,
+      {
+        data: { password, username },
+      }
+    );
+    alert("Your account has been deleted! Sorry to let you go..");
+    navigate("/login");
+  };
+
+  //add new dog handle
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -87,20 +125,18 @@ function Profile() {
       setDogWeightError(true);
       setDogWeightErrorMessage("Dog weight must be betweent 5 to 130 kg");
     } else {
-      console.log("submitted-->");
-
-        const payload = {
-          dog_name: dogname,
-          dog_weight: dogweight,
-          dog_color: dogcolor,
-          owner: "bishesh",
-          date_added:"2021-11-17",
-          dog_pic: "null"
-        };
-        console.log(payload)
-        addNewDog(payload, dispatch)
-        fetchDogs(dispatch);
+      const payload = {
+        dog_name: dogname,
+        dog_weight: dogweight,
+        dog_color: dogcolor,
+        owner: localStorage.getItem("username"),
+        date_added: "2021-11-17",
+        dog_pic: "null",
+      };
+      addNewDog(payload, dispatch);
+      fetchDogs(dispatch);
       setOpen(false);
+      forceUpdate();
     }
   };
 
@@ -128,25 +164,58 @@ function Profile() {
           >
             <Tab label="My Profile" {...a11yProps(0)} />
             <Tab label="My Dog" {...a11yProps(1)} />
+            <Tab label="My Events History" {...a11yProps(1)} />
           </Tabs>
         </Box>
         <TabPanel value={value} index={0}>
           <div className="profile-panel">
             <ProfileCard />
-            <Button>Delete Profile</Button>
+            <Button onClick={handleClickOpenDelete}>Delete Profile</Button>
           </div>
+          <Dialog open={openDelete} onClose={handleCloseDelete}>
+            <DialogTitle>
+              Deleting Profile can not be undone. Are you sure you want to
+              delete?
+            </DialogTitle>
+            <DialogContent>
+              <TextField
+                className="TextField"
+                fullWidth
+                label="Username"
+                onChange={(e) => setUsername(e.target.value)}
+                required
+                type="text"
+                variant="standard"
+              />
+              <TextField
+                className="TextField"
+                fullWidth
+                required
+                label="Password"
+                onChange={(e) => setPassword(e.target.value)}
+                type="password"
+                variant="standard"
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCloseDelete}>Cancel </Button>
+              <Button type="submit" onClick={handleSubmitDelete}>
+                Submit
+              </Button>
+            </DialogActions>
+          </Dialog>
         </TabPanel>
         <TabPanel value={value} index={1}>
           <div className="dog-panel">
             <div className="dog-list">
-              {dogsDetails?.map((dg, i) => (
-                <DogCard dg = {dg} key={i}/>
-              ))}
-              
-             
+              {dogs
+                .filter((item) => item.owner == ownerId)
+                .map((dg, i) => (
+                  <DogCard dg={dg} key={i} />
+                ))}
             </div>
             <div className="dog-add">
-              <form >
+              <form>
                 <Button
                   onClick={handleClickOpen}
                   style={{ backgroundColor: "teal", color: "white" }}
@@ -203,12 +272,57 @@ function Profile() {
                   </DialogContent>
                   <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
-                    <Button type="submit" onClick={handleSubmit}>Submit</Button>
+                    <Button type="submit" onClick={handleSubmit}>
+                      Submit
+                    </Button>
                   </DialogActions>
                 </Dialog>
               </form>
             </div>
           </div>
+        </TabPanel>
+        <TabPanel value={value} index={2}>
+          <div className="event-panel">
+            <div className="eventHistory-list">
+              {eventsDetails
+                .filter((item) => item.creator == ownerId)
+                .map((ev, i) => (
+                  <EventHistoryCard ev={ev} key={i} />
+                ))}
+            </div>
+          </div>
+          <Dialog open={openDelete} onClose={handleCloseDelete}>
+            <DialogTitle>
+              Deleting Profile can not be undone. Are you sure you want to
+              delete?
+            </DialogTitle>
+            <DialogContent>
+              <TextField
+                className="TextField"
+                fullWidth
+                label="Username"
+                onChange={(e) => setUsername(e.target.value)}
+                required
+                type="text"
+                variant="standard"
+              />
+              <TextField
+                className="TextField"
+                fullWidth
+                required
+                label="Password"
+                onChange={(e) => setPassword(e.target.value)}
+                type="password"
+                variant="standard"
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCloseDelete}>Cancel </Button>
+              <Button type="submit" onClick={handleSubmitDelete}>
+                Submit
+              </Button>
+            </DialogActions>
+          </Dialog>
         </TabPanel>
       </Box>
     </div>

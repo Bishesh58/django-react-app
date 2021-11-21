@@ -17,6 +17,14 @@
   padding: 3px;
   display: flex;
   flex-wrap: wrap;
+  height: 100% !important;
+}
+
+.eventHistory-list {
+  padding: 3px;
+  display: flex;
+  flex-wrap: wrap;
+  height: 100% !important;
 }
 
 .dog-add {
