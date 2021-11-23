@@ -16,7 +16,7 @@ import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DatePicker from "@mui/lab/DatePicker";
 import axios from "axios";
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
-import { fetchDogs } from "../../redux/apiCalls";
+import { fetchDogs, fetchEvents } from "../../redux/apiCalls";
 import { useDispatch, useSelector } from "react-redux";
 import Moment from "moment";
 
@@ -38,11 +38,11 @@ export default function RecipeReviewCard({ ev }) {
     setExpanded(!expanded);
   };
 
-  const [title, setTitle] = useState("");
-  const [body, setBody] = useState("");
-  const [address, setAddress] = useState("");
-  const [post_date, setPost_date] = useState("");
-  const [state_date, setStart_date] = useState(ev?.start_date);
+  const [title, setTitle] = useState(ev?.title);
+  const [body, setBody] = useState(ev?.body);
+  const [address, setAddress] = useState(ev?.address);
+  const [post_date, setPost_date] = useState(ev?.post_date);
+  const [start_date, setStart_date] = useState(ev?.start_date);
   const [end_date, setEnd_date] = useState(ev?.end_date);
   const [join, setJoin] = useState([]);
 
@@ -50,24 +50,27 @@ export default function RecipeReviewCard({ ev }) {
 
   const handleUpdateSubmit = (e) => {
     e.preventDefault();
-
-    // axios.put(`https://django-dog-api.herokuapp.com/api/events/${ev.id}/`, {
-    //   title,
-    //   body,
-    //   start_date,
-    //   end_date,
-    //   address,
-    // });
+    axios.put(`https://django-dog-api.herokuapp.com/api/events/${ev.id}/`, {
+      title,
+      body,
+      start_date,
+      end_date,
+      address,
+    });
     setExpanded(false);
+    
   };
 
   const handleDelete = async (e) => {
-    // await axios.delete(
-    //   `https://django-dog-api.herokuapp.com/api/events/${ev.id}`,
-    //   {
-    //     crossdomain: true,
-    //   }
-    // );
+   const res = await axios.delete(
+      `https://django-dog-api.herokuapp.com/api/events/${ev.id}`,
+      {
+        crossdomain: true,
+      }
+    );
+    if(res.status == 204){
+      alert("event deleted successfully!")
+     }
   };
 
   const resetField = () => {
@@ -80,7 +83,7 @@ export default function RecipeReviewCard({ ev }) {
     <div className="eventHistoryCard">
       <Card sx={{ maxWidth: 480, minWidth: 300, margin: 3 }}>
         <CardContent>
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant="body2" color="text.secondary" component={"div"}>
             Title: {ev.title} <br /> <hr />
             Body: {ev.body} <br />
             Address: {ev.address} <br />
@@ -117,7 +120,11 @@ export default function RecipeReviewCard({ ev }) {
                 placeholder={ev.title}
                 onChange={(e) => setTitle(e.target.value)}
               />
-              <Typography variant="body2" color="text.secondary">
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                component={"div"}
+              >
                 Body:
               </Typography>
               <TextareaAutosize
@@ -130,7 +137,11 @@ export default function RecipeReviewCard({ ev }) {
                 placeholder={ev.body}
                 style={{ width: "100%" }}
               />
-              <Typography variant="body2" color="text.secondary">
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                component={"div"}
+              >
                 Address: {ev.address}
               </Typography>
               <div className="geocoding">
@@ -171,7 +182,7 @@ export default function RecipeReviewCard({ ev }) {
                   <DatePicker
                     renderInput={(props) => <TextField {...props} />}
                     label="Start date"
-                    value={state_date}
+                    value={start_date}
                     onChange={(newValue) => {
                       setStart_date(
                         Moment(`"${newValue}"`).format("YYYY-MM-DD")

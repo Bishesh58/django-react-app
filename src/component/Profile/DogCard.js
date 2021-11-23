@@ -12,7 +12,7 @@ import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Button } from "@mui/material";
 import axios from "axios";
-import { fetchDogs } from "../../redux/apiCalls";
+import { fetchDogs, fetchEvents } from "../../redux/apiCalls";
 import { useDispatch } from "react-redux";
 
 const ExpandMore = styled((props) => {
@@ -36,29 +36,42 @@ export default function RecipeReviewCard({ dg }) {
   const [dogname, setDogname] = useState(dg?.dogname);
   const [dogcolor, setDogcolor] = useState(dg?.dogcolor);
   const [dogweight, setDogweight] = useState(dg?.dogweight);
-
+  const [dogBreed, setDogBreed] = useState(dg?.dog_breed);
   const dispatch = useDispatch();
 
-  const handleUpdateSubmit = (e) => {
+  const handleUpdateSubmit = async (e) => {
     e.preventDefault();
     let dog_name = dogname;
     let dog_color = dogcolor;
     let dog_weight = dogweight;
-    axios.put(`https://django-dog-api.herokuapp.com/api/dogs/${dg.id}/`, {
+    let dog_breed = dogBreed;
+    await axios.put(`https://django-dog-api.herokuapp.com/api/dogs/${dg.id}/`, {
       dog_name,
       dog_color,
       dog_weight,
+      dog_breed,
     });
     setExpanded(false);
+    fetchDogs(dispatch);
+    document.getElementById("profileBtn").addEventListener("click", function(){
+      //re-render
+    });
+
   };
 
   const handleDelete = async (e) => {
-    await axios.delete(
+   const res = await axios.delete(
       `https://django-dog-api.herokuapp.com/api/dogs/${dg.id}`,
       {
         crossdomain: true,
       }
     );
+    if(res.status == 204){
+     alert("dog deleted successfully!")
+    }
+    document.getElementById("profileBtn").addEventListener("click", function(){
+      //rerender
+    });
   };
 
   return (
@@ -72,9 +85,10 @@ export default function RecipeReviewCard({ dg }) {
         />
         <CardContent>
           <Typography variant="body2" color="text.secondary">
-            dogname: {dg.dog_name} <br />
-            dogweight: {dg.dog_weight} <br />
-            dogcolor: {dg.dog_color} <br />
+            Dog name: {dg.dog_name} <br />
+            Dog weight: {dg.dog_weight} <br />
+            Dog color: {dg.dog_color} <br />
+            Dog breed: {dg.dog_breed} <br />
           </Typography>
         </CardContent>
         <CardActions disableSpacing>
@@ -93,7 +107,11 @@ export default function RecipeReviewCard({ dg }) {
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <CardContent>
             <form>
-              <Typography variant="body2" color="text.secondary">
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                component={"div"}
+              >
                 Dog Name:
               </Typography>
               <TextField
@@ -103,7 +121,11 @@ export default function RecipeReviewCard({ dg }) {
                 placeholder={dg?.dog_name}
                 onChange={(e) => setDogname(e.target.value)}
               />
-              <Typography variant="body2" color="text.secondary">
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                component={"div"}
+              >
                 Dog Color:
               </Typography>
               <TextField
@@ -112,7 +134,11 @@ export default function RecipeReviewCard({ dg }) {
                 placeholder={dg?.dog_color}
                 onChange={(e) => setDogcolor(e.target.value)}
               />
-              <Typography variant="body2" color="text.secondary">
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                component={"div"}
+              >
                 Dog Weight:
               </Typography>
               <TextField
@@ -120,6 +146,19 @@ export default function RecipeReviewCard({ dg }) {
                 fullWidth
                 placeholder={dg?.dog_weight}
                 onChange={(e) => setDogweight(e.target.value)}
+              />
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                component={"div"}
+              >
+                Dog Breed:
+              </Typography>
+              <TextField
+                className="TextField"
+                fullWidth
+                placeholder={dg?.dog_breed}
+                onChange={(e) => setDogBreed(e.target.value)}
               />
               <Button type="submit" fullWidth onClick={handleUpdateSubmit}>
                 Update

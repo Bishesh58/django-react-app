@@ -104,6 +104,7 @@ export default function Navbar() {
       </MenuItem>
       <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton
+          id="profileBtn"
           size="large"
           aria-label="account of current user"
           aria-controls="primary-search-account-menu"

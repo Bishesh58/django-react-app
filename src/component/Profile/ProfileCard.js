@@ -48,16 +48,15 @@ export default function RecipeReviewCard() {
     setExpanded(!expanded);
   };
 
-  const handleUpdateSubmit = (e) => {
+  const handleUpdateSubmit = async (e) => {
     e.preventDefault();
     let first_name = firstName;
     let last_name = lastName;
-    axios.put(
+    await axios.put(
       `https://django-dog-api.herokuapp.com/api/user/${userid}/`,
       { password, username, first_name, last_name, email }
     );
     setExpanded(false);
-
   };
 
   return (
@@ -69,16 +68,16 @@ export default function RecipeReviewCard() {
         alt="Paella dish"
       />
       <CardContent>
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="body2" color="text.secondary" component={"div"}>
           Username: {username}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="body2" color="text.secondary" component={"div"}>
           First Name: {firstName}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="body2" color="text.secondary" component={"div"}>
           Last Name: {lastName}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="body2" color="text.secondary" component={"div"}>
           email: {email}
         </Typography>
       </CardContent>

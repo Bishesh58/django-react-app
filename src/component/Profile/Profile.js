@@ -129,6 +129,7 @@ function Profile() {
         dog_name: dogname,
         dog_weight: dogweight,
         dog_color: dogcolor,
+        dog_breed: dogbreed,
         owner: localStorage.getItem("username"),
         date_added: "2021-11-17",
         dog_pic: "null",
